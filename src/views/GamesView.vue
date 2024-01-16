@@ -1,17 +1,41 @@
 <script setup>
-const gamesBackEnd = ([])
+import { onMounted, ref } from 'vue'
 
+const gamesBackEnd = ref([])
+
+onMounted( async () => {
+    await fetchData()
+})
+
+async function fetchData() {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/games`)
+        const result = await response.json()
+        gamesBackEnd.value = result
+    } catch (error) {
+        console.error('Error fetching data:', error)
+    }
+}
 
 </script>
 
 <template>
-    <main>
-        <h1>Library</h1>
-        <ul>
-            <li v-for="game in gamesBackEnd" :key="game._id">
-                {{ game.name }}
-            </li>
-            <li><RouterLink :to="'/library/add' ">Add Game</RouterLink></li>
-        </ul>
+    <main class="bg-dark text-white text-center">
+        <h1 class="p-5">Games</h1>
+            <div class="container d-flex flex-row flex-wrap justify-content-center align-items-center">
+                <div v-for="game in gamesBackEnd" :key="game._id" class="card me-5 mb-5 bg-warning-subtle border-warning" style="width: 12rem;">
+                    <img :src="game.cover" alt="Game Cover" class="card-img-top" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ game.gameName }}</h5>
+                        <button class="btn btn-warning text-white">Logs</button>
+                    </div>
+                </div>
+                <router-link to="/games/add" class="card me-5 bg-warning-subtle border-warning" style="width: 12rem; text-decoration: none;">
+                    <div class="card-body d-flex align-items-center justify-content-center">
+                        <button class="btn btn-warning text-white">Add New</button>
+                    </div>
+                </router-link>
+            </div>
     </main>
+
 </template>
