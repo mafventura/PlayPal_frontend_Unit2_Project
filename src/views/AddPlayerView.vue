@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useCookies } from 'vue3-cookies'
 import { decodeCredential } from 'vue3-google-login'
 import { useRouter } from 'vue-router';
@@ -7,12 +7,14 @@ import { useRouter } from 'vue-router';
 const router = useRouter()
 
 const { cookies } = useCookies()
-const user = decodeCredential(cookies.get('user_session'))
+// const user = decodeCredential(cookies.get('user_session'))
+
+const userEmail = ref()
 
 const player = ref({
     playerName: '',
     playerImg: '',
-    user: user.email
+    // user: user.email
 })
 
 async function addPlayer() {
@@ -21,7 +23,8 @@ async function addPlayer() {
         const response = await fetch(`${import.meta.env.VITE_API_URL}/players/add`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'User-Email': userEmail.value
             },
             body: JSON.stringify(player.value)
         })
@@ -30,7 +33,7 @@ async function addPlayer() {
             player.value = {
                 playerName: '',
                 playerImg: '',
-                user: user.email
+                // user: user.email
             }
         }
 
@@ -41,6 +44,15 @@ async function addPlayer() {
     }
         
     } 
+
+    function checkSession() {
+        if (cookies.isKey('user_session')) {
+            const user = decodeCredential(cookies.get('user_session'))
+            userEmail.value = user.email
+        }
+    }
+
+    onMounted(checkSession)
 
 </script>
 

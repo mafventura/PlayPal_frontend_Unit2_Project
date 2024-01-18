@@ -4,17 +4,31 @@ import { useCookies } from 'vue3-cookies'
 import { decodeCredential } from 'vue3-google-login'
 
 const { cookies } = useCookies()
-const user = decodeCredential(cookies.get('user_session'))
 
 const gamesBackEnd = ref([])
+const userEmail = ref()
 
-onMounted( async () => {
-    await fetchData()
+onMounted( () => {
+    checkSession(),
+    fetchData()
 })
+
+function checkSession() {
+        if (cookies.isKey('user_session')) {
+            const user = decodeCredential(cookies.get('user_session'))
+            userEmail.value = user.email
+        }
+    }
 
 async function fetchData() {
     try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/games?userEmail=${user.email}`)
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/games`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'User-Email': userEmail.value
+            }
+        })
         const result = await response.json()
         gamesBackEnd.value = result
     } catch (error) {
@@ -26,7 +40,12 @@ async function fetchData() {
 async function deleteGame(gameId) {
     try {
         await fetch(`${import.meta.env.VITE_API_URL}/games/${gameId}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'User-Email': userEmail.value
+            }
+
         })
         alert('Game Deleted')
         fetchData()

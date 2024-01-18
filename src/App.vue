@@ -31,7 +31,6 @@
             <RouterLink to="/players" class="nav-link text-white ">Players</RouterLink>
             <img src="" alt="">
           </div>
-          
         </nav>
     </div>
   </header>

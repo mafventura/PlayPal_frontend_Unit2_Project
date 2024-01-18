@@ -46,7 +46,7 @@
                             <h5>Duration: {{ log.durationHours }}h{{ log.durationMinutes }}</h5>
                             <h5>Players: </h5>
                             <div v-for="score in log.scores" :key="score._id">
-                                <h6>{{ score.player.playerName }}: {{ score.score }}</h6>
+                                <h6>{{ score.player?.playerName }}: {{ score.score }}</h6>
                             </div>
                             <hr>
                         </div>

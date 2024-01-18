@@ -1,9 +1,14 @@
 <script setup>
     import { onMounted, ref } from 'vue';
     import { useRouter, useRoute } from 'vue-router';
+    import { useCookies } from 'vue3-cookies'
+    import { decodeCredential } from 'vue3-google-login'
+
+    const { cookies } = useCookies()
 
     const router = useRouter()
     const route = useRoute()
+    const userEmail = ref()
 
     const log = ref({
         gameId: route.params.id,
@@ -19,15 +24,29 @@
 
 
     onMounted(() => {
+        checkSession(),
         fetchPlayers()
     })
 
+    function checkSession() {
+        if (cookies.isKey('user_session')) {
+            const user = decodeCredential(cookies.get('user_session'))
+            userEmail.value = user.email
+        }
+    }
+
     function fetchPlayers() {
 
-            fetch(`${import.meta.env.VITE_API_URL}/players`)
+            fetch(`${import.meta.env.VITE_API_URL}/players`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'User-Email': userEmail.value
+            }})
             .then(response => response.json())
             .then(result => {
                 players.value = result
+                console.log(result);
             })
             .catch(err => console.error(err))
     }
@@ -38,7 +57,8 @@
             const response = await fetch(`${import.meta.env.VITE_API_URL}/log/add/${gameId}`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'User-Email': userEmail.value
                 },
                 body: JSON.stringify(log.value)
             })
@@ -52,7 +72,7 @@
                 }
             }
 
-            router.replace({ name: `/games/${gameId}`})
+            router.push(`/games/${gameId}`)
 
         } catch (error) {
             console.error('Error fetching data:', error)
@@ -62,8 +82,9 @@
 
     function addPlayerScore() {
         if(selectedPlayer.value && selectedScore.value !== '') {
+            console.log(selectedPlayer.value);
             log.value.scores.push({
-                playerId: selectedPlayer.value,
+                playerName: selectedPlayer.value,
                 score: selectedScore.value
             })
 
@@ -90,7 +111,7 @@
                 <label class="input-group-text" for="player">Player:</label>
                 <select v-model="selectedPlayer" class="form-select form-control">
                 <option disabled value="">Select a player</option>
-                <option v-for="player in players" :key="player._id" :value="player._id">{{ player.playerName }}</option>
+                <option v-for="player in players" :key="player._id" :value="player.playerName">{{ player.playerName }}</option>
             </select>
             </div>
             
