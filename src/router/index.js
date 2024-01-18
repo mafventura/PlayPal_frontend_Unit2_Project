@@ -3,8 +3,10 @@ import HomeView from '../views/HomeView.vue'
 import GamesView from '@/views/GamesView.vue'
 import SingleGameView from '@/views/SingleGameView.vue'
 import PlayersView from '@/views/PlayersView.vue'
-import SinglePlayerView from '@/views/SinglePlayerView.vue'
+import AddPlayerView from '@/views/AddPlayerView.vue'
 import AddGameView from '@/views/AddGameView.vue'
+import LoginView from '@/components/LoginView.vue'
+import AddLogView from '@/views/AddLogView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -25,7 +27,7 @@ const router = createRouter({
       component: AddGameView
     },
     {
-      path: '/games/:game_id',
+      path: '/games/:id',
       name: 'singlegame',
       component: SingleGameView
     },
@@ -35,9 +37,19 @@ const router = createRouter({
       component: PlayersView
     },
     {
-      path: '/players/:id',
+      path: '/players/add',
       name: 'singleplayer',
-      component: SinglePlayerView
+      component: AddPlayerView
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: LoginView
+    },
+    {
+      path: '/log/add/:id',
+      name: 'addlog',
+      component: AddLogView
     },
     
   ]

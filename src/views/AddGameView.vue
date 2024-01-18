@@ -1,13 +1,23 @@
 <script setup>
 import { ref } from 'vue';
+import { useCookies } from 'vue3-cookies'
+import { decodeCredential } from 'vue3-google-login'
+import { useRouter } from 'vue-router';
+
+const router = useRouter()
+
+const { cookies } = useCookies()
+const user = decodeCredential(cookies.get('user_session'))
 
 const game = ref({
     gameName: '',
-    cover: ''
+    cover: '',
+    user: user.email
 })
 
 async function addGame() {
     try {
+        
         const response = await fetch(`${import.meta.env.VITE_API_URL}/games/add`, {
             method: 'POST',
             headers: {
@@ -19,9 +29,12 @@ async function addGame() {
         if (response) {
             game.value = {
                 gameName: '',
-                cover: ''
+                cover: '',
+                user: user.email
             }
         }
+
+        router.replace({ name: 'games'})
 
     } catch (error) {
         console.error('Error fetching data:', error)
@@ -30,14 +43,10 @@ async function addGame() {
     } 
 
 
-    
-
-
-
 </script>
 
 <template>
-    <main class="bg-dark text-white text-center">
+    <body class="bg-dark text-white text-center">
         <h1 class="p-5">Add New Game</h1>
 
         <div class="container d-flex flex-column align-items-center">
@@ -51,5 +60,5 @@ async function addGame() {
             </div>
             <button @click="addGame" class="btn btn-warning">Add Game</button>
         </div>
-    </main>
+    </body>
 </template>

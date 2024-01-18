@@ -1,5 +1,10 @@
 <script setup>
 import { onMounted, ref } from 'vue'
+import { useCookies } from 'vue3-cookies'
+import { decodeCredential } from 'vue3-google-login'
+
+const { cookies } = useCookies()
+const user = decodeCredential(cookies.get('user_session'))
 
 const gamesBackEnd = ref([])
 
@@ -9,7 +14,7 @@ onMounted( async () => {
 
 async function fetchData() {
     try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/games`)
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/games?userEmail=${user.email}`)
         const result = await response.json()
         gamesBackEnd.value = result
     } catch (error) {
@@ -17,17 +22,34 @@ async function fetchData() {
     }
 }
 
+
+async function deleteGame(gameId) {
+    try {
+        await fetch(`${import.meta.env.VITE_API_URL}/games/${gameId}`, {
+            method: 'DELETE'
+        })
+        alert('Game Deleted')
+        fetchData()
+
+    } catch (error) {
+        console.error('Error deleting game:', error)
+    }
+}
+
 </script>
 
 <template>
-    <main class="bg-dark text-white text-center">
+    <body class="bg-dark text-white text-center">
         <h1 class="p-5">Games</h1>
             <div class="container d-flex flex-row flex-wrap justify-content-center align-items-center">
                 <div v-for="game in gamesBackEnd" :key="game._id" class="card me-5 mb-5 bg-warning-subtle border-warning" style="width: 12rem;">
-                    <img :src="game.cover" alt="Game Cover" class="card-img-top" style="height: 200px; object-fit: cover;">
+                    <div style="position: relative;">
+                        <button @click="deleteGame(game._id)" type="button" class="btn-close m-1" style="position: absolute; top: 0; right: 0; z-index: 1;"></button>
+                        <img :src="game.cover" alt="Game Cover" class="card-img-top" style="height: 200px; object-fit: cover;">
+                    </div>
                     <div class="card-body">
                         <h5 class="card-title">{{ game.gameName }}</h5>
-                        <button class="btn btn-warning text-white">Logs</button>
+                        <router-link :to="'/games/' + game._id"><button class="btn btn-warning text-white">Logs</button></router-link>
                     </div>
                 </div>
                 <router-link to="/games/add" class="card me-5 bg-warning-subtle border-warning" style="width: 12rem; text-decoration: none;">
@@ -36,6 +58,6 @@ async function fetchData() {
                     </div>
                 </router-link>
             </div>
-    </main>
+    </body>
 
 </template>
