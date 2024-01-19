@@ -62,7 +62,9 @@ async function deletePlayer(playerId) {
                     </div>
                     <div class="card-body">
                         <h5 class="card-title">{{ player.playerName }}</h5>
-                        <button class="btn btn-warning text-white">Edit</button>
+                        <router-link :to="'/players/edit/' + player._id ">
+                            <button class="btn btn-warning text-white">Edit</button>
+                        </router-link>
                     </div>
                 </div>
                 <router-link to="/players/add" class="card me-5 bg-warning-subtle border-warning" style="width: 12rem; text-decoration: none;">

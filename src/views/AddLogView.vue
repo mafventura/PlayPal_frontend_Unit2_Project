@@ -123,7 +123,7 @@
         </div>
 
         <ul>
-            <li v-for="(score, index) in log.scores" :key="index">
+            <li v-for="(score, index) in log.scores" :key="index" style="text-decoration: none;">
                 Player: {{ score.playerName }}, Score: {{ score.score }}
             </li>
         </ul>
