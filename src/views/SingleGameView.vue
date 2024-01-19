@@ -20,7 +20,9 @@
         .then(response1 => response1.json())
         .then(result1 => {
             logs.value = result1
+            console.log(result1);
         })
+
     })
 </script>
 

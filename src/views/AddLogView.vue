@@ -46,7 +46,6 @@
             .then(response => response.json())
             .then(result => {
                 players.value = result
-                console.log(result);
             })
             .catch(err => console.error(err))
     }
@@ -64,12 +63,14 @@
             })
 
             if (response) {
+                console.log('log.VALUE:', log.value);
                 log.value = {
                     gameId: route.params.id,
                     durationHours: '',
                     durationMinutes: '',
                     scores: []
                 }
+
             }
 
             router.push(`/games/${gameId}`)
@@ -82,12 +83,11 @@
 
     function addPlayerScore() {
         if(selectedPlayer.value && selectedScore.value !== '') {
-            console.log(selectedPlayer.value);
             log.value.scores.push({
                 playerName: selectedPlayer.value,
                 score: selectedScore.value
             })
-
+            console.log('SCORES:', log.value.scores);
             selectedPlayer.value = ''
             selectedScore.value = ''
         }
