@@ -12,7 +12,7 @@ The app has been deployed and is available [here](https://playpal-mevn-frontend.
 
 ## Getting started
 
-This project is separated into two repos, frontend and [backend]([https://playpal-mevn-frontend.netlify.app/](https://github.com/mafventura/PlayPal_backend_Unit2_Project)). 
+This project is separated into two repos, frontend and [backend](https://github.com/mafventura/PlayPal_backend_Unit2_Project)). 
 
 1. Access the source code via the 'Clone or download' button 
 2. In CLI, run `npm i` on the root level to install dependencies
