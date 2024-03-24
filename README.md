@@ -1,6 +1,4 @@
-# PlaPal (frontend)
-
-# Space Invaders - Project One (GA)
+# PlaPal (frontend) - Project Two (GA)
 
 This web application was made as the final project for Unit 2. It follows a MEVN structure with MongoDB, Express, Vue and Node.
 My project is a web application where you can add your board games to your library, add your friends and family as players, and log and keep track of scoring through out your various plays!
